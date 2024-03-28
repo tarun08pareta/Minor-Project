@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar Scheduling App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  #calendar {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  #schedule-form {
+    text-align: left;
+  }
+
+  #schedule-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  #schedule-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  #schedule-form button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #schedule-form button:hover {
+    background-color: #45a049;
+  }
+
+  #appointment-success {
+    color: green;
+    margin-top: 20px;
+  }
+
+  .calendar-item {
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .calendar-item.available {
+    background-color: #dff0d8;
+  }
+
+  .calendar-item.unavailable {
+    background-color: #f2dede;
+  }
+
+  .calendar-item.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Calendar Scheduling App</h1>
+  <div id="calendar"></div>
+  <div id="schedule-form" style="display: none;">
+    <h2>Schedule Appointment</h2>
+    <form id="appointment-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required><br><br>
+      <button type="submit">Schedule</button>
+    </form>
+  </div>
+  <div id="appointment-success" style="display: none;">
+    <p>Appointment scheduled successfully!</p>
+  </div>
+</div>
+
+<script>
+const calendarData = [
+  { date: '2024-04-01', available: true },
+  { date: '2024-04-02', available: false },
+  { date: '2024-04-03', available: true },
+  { date: '2024-04-04', available: true }
+];
+
+const calendarContainer = document.getElementById('calendar');
+const scheduleForm = document.getElementById('schedule-form');
+const appointmentSuccess = document.getElementById('appointment-success');
+
+function renderCalendar() {
+  const today = new Date();
+  let calendarHTML = '';
+
+  calendarData.forEach(item => {
+    const date = new Date(item.date);
+    const dateString = date.toDateString();
+    const available = item.available;
+    const isPastDate = date < today;
+    const disabledClass = isPastDate ? 'disabled' : '';
+
+    calendarHTML += `<div class="calendar-item ${available ? 'available' : 'unavailable'} ${disabledClass}" data-date="${item.date}">
+                        ${dateString} 
+                      </div>`;
+  });
+
+  calendarContainer.innerHTML = calendarHTML;
+}
+
+function handleCalendarClick(event) {
+  const target = event.target;
+  if (target.classList.contains('available') && !target.classList.contains('disabled')) {
+    const date = target.getAttribute('data-date');
+    scheduleForm.style.display = 'block';
+    scheduleForm.dataset.date = date;
+  }
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+  
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const date = scheduleForm.dataset.date;
+
+  if (!name || !email) {
+    alert('Please fill out all fields');
+    return;
+  }
+
+  showAppointmentSuccess();
+}
+
+function showAppointmentSuccess() {
+  scheduleForm.style.display = 'none';
+  appointmentSuccess.style.display = 'block';
+}
+
+renderCalendar();
+
+calendarContainer.addEventListener('click', handleCalendarClick);
+scheduleForm.addEventListener('submit', handleFormSubmit);
+</script>
+
+</body>
+</html>
