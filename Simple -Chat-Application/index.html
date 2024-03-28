@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Chat Application</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+width: 100vw;
+
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  #chat-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+  #message-input {
+    width: calc(100% - 90px);
+    margin-right: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Simple Chat Application</h1>
+  <div id="chat-box"></div>
+  <div>
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
+<script>
+// Mock data for chat messages
+const chatData = [
+  { sender: "User1", message: "Hello!" },
+  { sender: "User2", message: "Hi there!" },
+  { sender: "User1", message: "How are you?" },
+  { sender: "User2", message: "I'm good, thanks!" },
+  { sender: "User1", message: "What's up?" }
+];
+
+const chatBox = document.getElementById("chat-box");
+const messageInput = document.getElementById("message-input");
+const sendButton = document.getElementById("send-btn");
+
+// Function to display chat messages
+function displayMessages() {
+  chatBox.innerHTML = "";
+  chatData.forEach(chat => {
+    const messageDiv = document.createElement("div");
+    messageDiv.textContent = `${chat.sender}: ${chat.message}`;
+    chatBox.appendChild(messageDiv);
+  });
+  // Scroll to bottom of chat box
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Function to handle sending a message
+function sendMessage() {
+  const message = messageInput.value.trim();
+  if (message !== "") {
+    chatData.push({ sender: "You", message });
+    displayMessages();
+    messageInput.value = "";
+  }
+}
+
+// Display initial messages
+displayMessages();
+
+// Event listener for send button
+sendButton.addEventListener("click", sendMessage);
+
+// Event listener for pressing Enter key to send message
+messageInput.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
+
+</script>
+
+</body>
+</html>
